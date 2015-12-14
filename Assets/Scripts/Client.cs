@@ -25,7 +25,7 @@ public class Client : MonoBehaviour {
         int maxConnections = 15;
         HostTopology topology = new HostTopology(config, maxConnections);
         socketID = NetworkTransport.AddHost(topology, socketPort);
-        Debug.Log("Socket Open. Socket ID = " + socketID);
+        //Debug.Log("Socket Open. Socket ID = " + socketID);
         player = 0;
         moving = false;
         //Connect();
@@ -34,8 +34,8 @@ public class Client : MonoBehaviour {
     public void Connect()
     {
         byte error;                                 //mINE IS 149.153.102.52
-        connectionID = NetworkTransport.Connect(socketID, "149.153.102.62", socketPort, 0, out error);
-        Debug.Log("Sending my connect message " );
+        connectionID = NetworkTransport.Connect(socketID, "149.153.102.39", socketPort, 0, out error);
+        //Debug.Log("Sending my connect message " );
         if(player == 0)
         {
             player = 2;
@@ -60,8 +60,7 @@ public class Client : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        if (moving)
-        {
+
             int recHostId;
             int recChannelId;
             byte[] recBuffer = new byte[1024];
@@ -89,34 +88,34 @@ public class Client : MonoBehaviour {
             }
 
 
-            switch (recNetworkEvent)
-            {
-                case NetworkEventType.Nothing:
-                    break;
-                case NetworkEventType.ConnectEvent:
-                    Debug.Log("incoming connection event received");
-                    if (player == 0)
-                    {
-                        player = 1;
-                    }
-                    break;
-                case NetworkEventType.DataEvent:
-                    // Stream stream = new MemoryStream(recBuffer);
-                    //BinaryFormatter formatter = new BinaryFormatter();
-                    // string message = formatter.Deserialize(stream) as string;
-                    // Debug.Log("incoming message event received: " + message);
-                    recievedMessage(recBuffer);
-                    break;
-                case NetworkEventType.DisconnectEvent:
-                    Debug.Log("remote client event disconnected");
-                    break;
-            }
+        switch (recNetworkEvent)
+        {
+            case NetworkEventType.Nothing:
+                break;
+            case NetworkEventType.ConnectEvent:
+                //Debug.Log("incoming connection event received");
+                if (player == 0)
+                {
+                    player = 1;
+                }
+                break;
+            case NetworkEventType.DataEvent:
+                // Stream stream = new MemoryStream(recBuffer);
+                //BinaryFormatter formatter = new BinaryFormatter();
+                // string message = formatter.Deserialize(stream) as string;
+                // Debug.Log("incoming message event received: " + message);
+                recievedMessage(recBuffer);
+                break;
+            case NetworkEventType.DisconnectEvent:
+                //Debug.Log("remote client event disconnected");
+                break;
         }
+        
     }
     public void recievedMessage(byte[] data)
     {
         //Let's figure out what type of message this is.
-        Debug.Log("Receiving Message ");
+        //Debug.Log("Receiving Message ");
         char messageType = (char)data[0];
         if (messageType == 'U' )
         {
@@ -125,7 +124,7 @@ public class Client : MonoBehaviour {
             float velX = System.BitConverter.ToSingle(data, 9);
             float velY = System.BitConverter.ToSingle(data, 13);
             float rotZ = System.BitConverter.ToSingle(data, 17);
-            Debug.Log("Player 2" + " is at (" + posX + ", " + posY + ") traveling (" + velX + ", " + velY + ") rotation " + rotZ);
+            //Debug.Log("Player 2" + " is at (" + posX + ", " + posY + ") traveling (" + velX + ", " + velY + ") rotation " + rotZ);
 
             GameObject m_object;
             if (player == 1)
@@ -155,8 +154,8 @@ public class Client : MonoBehaviour {
         _updateMessage.AddRange(System.BitConverter.GetBytes(velocity.y));
         _updateMessage.AddRange(System.BitConverter.GetBytes(rotZ));
         byte[] messageToSend = _updateMessage.ToArray();
-        Debug.Log("Sending my update message  " + messageToSend + " to all players in the room , Length " +
-            messageToSend.Length);
+        //Debug.Log("Sending my update message  " + messageToSend + " to all players in the room , Length " +
+            //messageToSend.Length);
         //PlayGamesPlatform.Instance.RealTime.SendMessageToAll(false, messageToSend);
         NetworkTransport.Send(socketID, connectionID, ChannelID, messageToSend, messageToSend.Length, out error);
     }
