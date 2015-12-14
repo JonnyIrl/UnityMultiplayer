@@ -73,4 +73,9 @@ public class Player2 : MonoBehaviour {
     {
         this.transform.position = new Vector3(x, y, 0);
     }
+
+    void OnCollisionEnter2D(Collision2D coll)
+    {
+        Debug.Log("CAUGHT");
+    }
 }
