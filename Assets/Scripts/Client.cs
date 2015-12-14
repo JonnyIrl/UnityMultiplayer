@@ -32,7 +32,7 @@ public class Client : MonoBehaviour {
     public void Connect()
     {
         byte error;                                 //mINE IS 149.153.102.52
-        connectionID = NetworkTransport.Connect(socketID, "149.153.102.43", socketPort, 0, out error);
+        connectionID = NetworkTransport.Connect(socketID, "149.153.102.39", socketPort, 0, out error);
         Debug.Log("Sending my connect message " );
         if(player == 0)
         {

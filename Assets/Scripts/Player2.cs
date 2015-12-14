@@ -2,15 +2,21 @@
 using System.Collections;
 
 public class Player2 : MonoBehaviour {
+    Transform thisTransform;
+    public float speed;
 
-	// Use this for initialization
-	void Start () {
-	
-	}
+    // Use this for initialization
+    void Start () {
+        thisTransform = transform;
+    }
 	
 	// Update is called once per frame
 	void Update () {
         if (Client.getPlayer() == 2)
+        {
+            InputMovement();
+        }
+        /*if (Client.getPlayer() == 2)
         {
             if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
@@ -36,9 +42,33 @@ public class Player2 : MonoBehaviour {
                 position.y--;
                 this.transform.position = position;
             }
-        }
+        }*/
 
     }
+
+    private void InputMovement()
+    {
+        Vector2 pos = thisTransform.position;
+        if (Input.GetKey(KeyCode.W))
+        {
+            pos.y += speed;
+        }
+        if (Input.GetKey(KeyCode.S))
+        {
+            pos.y -= speed;
+        }
+        if (Input.GetKey(KeyCode.A))
+        {
+            pos.x -= speed;
+        }
+        if (Input.GetKey(KeyCode.D))
+        {
+            pos.x += speed;
+        }
+
+        thisTransform.position = pos;
+    }
+
     public void setPosition(int x, int y)
     {
         this.transform.position = new Vector3(x, y, 0);
