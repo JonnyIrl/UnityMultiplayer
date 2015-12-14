@@ -14,6 +14,7 @@ public class Client : MonoBehaviour {
     List<byte> _updateMessage = new List<byte>();
     int _updateMessageLength = 21;
     private static int player = 0;
+    public static bool moving;
     int recConnectionId;
     // Use this for initialization
     void Start()
@@ -26,13 +27,14 @@ public class Client : MonoBehaviour {
         socketID = NetworkTransport.AddHost(topology, socketPort);
         Debug.Log("Socket Open. Socket ID = " + socketID);
         player = 0;
+        moving = false;
         //Connect();
     }
 
     public void Connect()
     {
         byte error;                                 //mINE IS 149.153.102.52
-        connectionID = NetworkTransport.Connect(socketID, "149.153.102.39", socketPort, 0, out error);
+        connectionID = NetworkTransport.Connect(socketID, "149.153.102.62", socketPort, 0, out error);
         Debug.Log("Sending my connect message " );
         if(player == 0)
         {
@@ -51,7 +53,6 @@ public class Client : MonoBehaviour {
         formatter.Serialize(stream, "Hello");
 
         int bufferSize = 1024;
-
         NetworkTransport.Send(socketID, connectionID, ChannelID, buffer, bufferSize, out error);
         SendMyUpdate(10000, 100000,new Vector2(1000, 1000), 1000);
     }
@@ -59,52 +60,57 @@ public class Client : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        int recHostId;
-        int recChannelId;
-        byte[] recBuffer = new byte[1024];
-        int bufferSize = 1024;
-        int dataSize;
-        byte error;
-        NetworkEventType recNetworkEvent = NetworkTransport.Receive(out recHostId, out recConnectionId, out recChannelId,
-            recBuffer, bufferSize, out dataSize, out error);
-        //connectionID = recConnectionId;
-        //change this to send player data
-        GameObject m_object;
-        if (player == 1)
+        if (moving)
         {
-            m_object = GameObject.Find("BlueBall");
-            Vector3 pos = m_object.transform.position;
-            SendMyUpdate(pos.x, pos.y, new Vector2(0, 0), 0);
-        }
-        else if(player == 2)
-        {
-            m_object = GameObject.Find("RedBall");
-            Vector3 pos = m_object.transform.position;
-            SendMyUpdate(pos.x, pos.y, new Vector2(0, 0), 0);
-        }
-        
+            int recHostId;
+            int recChannelId;
+            byte[] recBuffer = new byte[1024];
+            int bufferSize = 1024;
+            int dataSize;
+            byte error;
+            NetworkEventType recNetworkEvent = NetworkTransport.Receive(out recHostId, out recConnectionId, out recChannelId,
+                recBuffer, bufferSize, out dataSize, out error);
+            //connectionID = recConnectionId;
+            //change this to send player data
+            GameObject m_object;
 
-        switch (recNetworkEvent)
-        {
-            case NetworkEventType.Nothing:
-                break;
-            case NetworkEventType.ConnectEvent:
-                Debug.Log("incoming connection event received");
-                if (player == 0)
-                {
-                    player = 1;
-                }
-                break;
-            case NetworkEventType.DataEvent:
-                // Stream stream = new MemoryStream(recBuffer);
-                //BinaryFormatter formatter = new BinaryFormatter();
-                // string message = formatter.Deserialize(stream) as string;
-                // Debug.Log("incoming message event received: " + message);
-                recievedMessage(recBuffer);
-                break;
-            case NetworkEventType.DisconnectEvent:
-                Debug.Log("remote client event disconnected");
-                break;
+
+            if (player == 1)
+            {
+                m_object = GameObject.Find("BlueBall");
+                Vector3 pos = m_object.transform.position;
+                SendMyUpdate(pos.x, pos.y, new Vector2(0, 0), 0);
+            }
+            else if (player == 2)
+            {
+                m_object = GameObject.Find("RedBall");
+                Vector3 pos = m_object.transform.position;
+                SendMyUpdate(pos.x, pos.y, new Vector2(0, 0), 0);
+            }
+
+
+            switch (recNetworkEvent)
+            {
+                case NetworkEventType.Nothing:
+                    break;
+                case NetworkEventType.ConnectEvent:
+                    Debug.Log("incoming connection event received");
+                    if (player == 0)
+                    {
+                        player = 1;
+                    }
+                    break;
+                case NetworkEventType.DataEvent:
+                    // Stream stream = new MemoryStream(recBuffer);
+                    //BinaryFormatter formatter = new BinaryFormatter();
+                    // string message = formatter.Deserialize(stream) as string;
+                    // Debug.Log("incoming message event received: " + message);
+                    recievedMessage(recBuffer);
+                    break;
+                case NetworkEventType.DisconnectEvent:
+                    Debug.Log("remote client event disconnected");
+                    break;
+            }
         }
     }
     public void recievedMessage(byte[] data)
@@ -157,5 +163,10 @@ public class Client : MonoBehaviour {
     public static int getPlayer()
     {
         return player;
+    }
+
+    public static void Moving(bool state)
+    {
+        moving = state;
     }
 }

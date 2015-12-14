@@ -52,21 +52,30 @@ public class Player2 : MonoBehaviour {
         if (Input.GetKey(KeyCode.W))
         {
             pos.y += speed;
+            Client.moving = true;
+
         }
         if (Input.GetKey(KeyCode.S))
         {
             pos.y -= speed;
+            Client.moving = true;
         }
         if (Input.GetKey(KeyCode.A))
         {
             pos.x -= speed;
+            Client.moving = true;
         }
         if (Input.GetKey(KeyCode.D))
         {
             pos.x += speed;
+            Client.moving = true;
         }
 
         thisTransform.position = pos;
+        if (!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
+        {
+            Client.moving = false;
+        }
     }
 
     public void setPosition(int x, int y)

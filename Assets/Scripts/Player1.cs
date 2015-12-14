@@ -4,49 +4,20 @@ using System.Collections;
 public class Player1 : MonoBehaviour {
     Transform thisTransform;
     public float speed;
+    public bool moving;
 
     // Use this for initialization
     void Start () {
         thisTransform = transform;
+        moving = false;
     }
 	
 	// Update is called once per frame
 	void Update () {
-        //if (GetComponent<NetworkView>().isMine)
-        //{
         if (Client.getPlayer() == 1)
         {
             InputMovement();
         }
-        //}
-
-        /*if (Client.getPlayer() == 1)
-        {
-            if (Input.GetKeyDown(KeyCode.LeftArrow))
-            {
-                Vector3 position = this.transform.position;
-                position.x--;
-                this.transform.position = position;
-            }
-            if (Input.GetKeyDown(KeyCode.RightArrow))
-            {
-                Vector3 position = this.transform.position;
-                position.x++;
-                this.transform.position = position;
-            }
-            if (Input.GetKeyDown(KeyCode.UpArrow))
-            {
-                Vector3 position = this.transform.position;
-                position.y++;
-                this.transform.position = position;
-            }
-            if (Input.GetKeyDown(KeyCode.DownArrow))
-            {
-                Vector3 position = this.transform.position;
-                position.y--;
-                this.transform.position = position;
-            }
-        }*/
     }
 
     private void InputMovement()
@@ -55,21 +26,30 @@ public class Player1 : MonoBehaviour {
         if (Input.GetKey(KeyCode.W))
         {
             pos.y += speed;
+            Client.moving = true;
+
         }
         if (Input.GetKey(KeyCode.S))
         {
             pos.y -= speed;
+            Client.moving = true;
         }
         if (Input.GetKey(KeyCode.A))
         {
             pos.x -= speed;
+            Client.moving = true;
         }
         if (Input.GetKey(KeyCode.D))
         {
             pos.x += speed;
+            Client.moving = true;
         }
 
         thisTransform.position = pos;
+        if(!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
+        {
+            Client.moving = false;
+        }
     }
 
     public void setPosition(int x , int y)
