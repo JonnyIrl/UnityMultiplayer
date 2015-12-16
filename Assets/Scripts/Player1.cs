@@ -8,12 +8,15 @@ public class Player1 : MonoBehaviour {
     public bool moving;
 
     int time;
+    int count;
     public Text timerText;
 
     // Use this for initialization
     void Start () {
         thisTransform = transform;
         moving = false;
+        count = 0;
+        time = 0;
     }
 	
 	// Update is called once per frame
@@ -22,8 +25,13 @@ public class Player1 : MonoBehaviour {
         {
             InputMovement();
         }
+
         time ++;
-        timerText.text = "Timer : " + time;
+        if (time % 60 == 1)
+        {
+            count += 1;
+        }
+        timerText.text = "Timer : " + count;
     }
 
     private void InputMovement()
