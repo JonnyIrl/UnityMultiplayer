@@ -85,6 +85,16 @@ public class Player2 : MonoBehaviour {
 
     void OnCollisionEnter2D(Collision2D coll)
     {
+        if (coll.gameObject.tag == "BlueBall" || coll.gameObject.tag == "RedBall")
+        {
+            Application.LoadLevel("ExitScene");
+            Debug.Log("SUPPOSED TO GO TO EXIT SCENE");
+        }
 
+        if(coll.gameObject.CompareTag("BlueBall") || coll.gameObject.CompareTag("RedBall"))
+        {
+            Application.LoadLevel("ExitScene");
+            Debug.Log("SUPPOSED TO GO TO EXIT SCENE");
+        }
     }
 }

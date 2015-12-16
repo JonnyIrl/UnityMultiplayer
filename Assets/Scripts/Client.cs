@@ -12,7 +12,7 @@ public class Client : MonoBehaviour {
     int socketPort = 9000;
     int connectionID;
     List<byte> _updateMessage = new List<byte>();
-    int _updateMessageLength = 21;
+    int _updateMessageLength = 9;
     private static int player = 0;
     public static bool moving;
     int recConnectionId;
@@ -54,12 +54,12 @@ public class Client : MonoBehaviour {
 
         int bufferSize = 1024;
         NetworkTransport.Send(socketID, connectionID, ChannelID, buffer, bufferSize, out error);
-        SendMyUpdate(10000, 100000,new Vector2(1000, 1000), 1000);
+        //SendMyUpdate(10000, 100000,new Vector2(1000, 1000), 1000);
     }
 
     // Update is called once per frame
     void Update()
-    {
+    { 
 
             int recHostId;
             int recChannelId;
@@ -78,13 +78,13 @@ public class Client : MonoBehaviour {
             {
                 m_object = GameObject.Find("BlueBall");
                 Vector3 pos = m_object.transform.position;
-                SendMyUpdate(pos.x, pos.y, new Vector2(0, 0), 0);
+                SendMyUpdate(pos.x, pos.y);
             }
             else if (player == 2)
             {
                 m_object = GameObject.Find("RedBall");
                 Vector3 pos = m_object.transform.position;
-                SendMyUpdate(pos.x, pos.y, new Vector2(0, 0), 0);
+                SendMyUpdate(pos.x, pos.y);
             }
 
 
@@ -121,9 +121,9 @@ public class Client : MonoBehaviour {
         {
             float posX = System.BitConverter.ToSingle(data, 1);
             float posY = System.BitConverter.ToSingle(data, 5);
-            float velX = System.BitConverter.ToSingle(data, 9);
-            float velY = System.BitConverter.ToSingle(data, 13);
-            float rotZ = System.BitConverter.ToSingle(data, 17);
+            //float velX = System.BitConverter.ToSingle(data, 9);
+            //float velY = System.BitConverter.ToSingle(data, 13);
+            //float rotZ = System.BitConverter.ToSingle(data, 17);
             //Debug.Log("Player 2" + " is at (" + posX + ", " + posY + ") traveling (" + velX + ", " + velY + ") rotation " + rotZ);
 
             GameObject m_object;
@@ -143,21 +143,16 @@ public class Client : MonoBehaviour {
         
 
     }
-    public void SendMyUpdate(float posX, float posY, Vector2 velocity, float rotZ)
+    public void SendMyUpdate(float posX, float posY)
     {
-        byte error;
-        _updateMessage.Clear();
-        _updateMessage.Add((byte)'U');
-        _updateMessage.AddRange(System.BitConverter.GetBytes(posX));
-        _updateMessage.AddRange(System.BitConverter.GetBytes(posY));
-        _updateMessage.AddRange(System.BitConverter.GetBytes(velocity.x));
-        _updateMessage.AddRange(System.BitConverter.GetBytes(velocity.y));
-        _updateMessage.AddRange(System.BitConverter.GetBytes(rotZ));
-        byte[] messageToSend = _updateMessage.ToArray();
-        //Debug.Log("Sending my update message  " + messageToSend + " to all players in the room , Length " +
-            //messageToSend.Length);
-        //PlayGamesPlatform.Instance.RealTime.SendMessageToAll(false, messageToSend);
-        NetworkTransport.Send(socketID, connectionID, ChannelID, messageToSend, messageToSend.Length, out error);
+ 
+            byte error;
+            _updateMessage.Clear();
+            _updateMessage.Add((byte)'U');
+            _updateMessage.AddRange(System.BitConverter.GetBytes(posX));
+            _updateMessage.AddRange(System.BitConverter.GetBytes(posY));
+            byte[] messageToSend = _updateMessage.ToArray();
+            NetworkTransport.Send(socketID, connectionID, ChannelID, messageToSend, messageToSend.Length, out error);
     }
     public static int getPlayer()
     {
