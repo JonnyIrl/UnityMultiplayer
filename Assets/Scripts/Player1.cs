@@ -59,6 +59,6 @@ public class Player1 : MonoBehaviour {
 
     void OnCollisionEnter2D(Collision2D coll)
     {
-        Debug.Log("CAUGHT");
+        //Debug.Log("CAUGHT");
     }
 }
