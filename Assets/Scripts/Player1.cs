@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class Player1 : MonoBehaviour {
@@ -27,7 +28,6 @@ public class Player1 : MonoBehaviour {
         {
             pos.y += speed;
             Client.moving = true;
-
         }
         if (Input.GetKey(KeyCode.S))
         {

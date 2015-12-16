@@ -2,7 +2,6 @@
 using System.Collections;
 
 public class PlayGameClick : MonoBehaviour {
-
     bool playGamePressed;
     // Use this for initialization
     void Start()
