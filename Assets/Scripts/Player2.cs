@@ -96,6 +96,5 @@ public class Player2 : MonoBehaviour {
             Application.LoadLevel("ExitScene");
             Debug.Log("SUPPOSED TO GO TO EXIT SCENE");
         }
-
     }
 }

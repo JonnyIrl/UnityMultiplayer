@@ -34,7 +34,7 @@ public class Client : MonoBehaviour {
     public void Connect()
     {
         byte error;                                 //mINE IS 149.153.102.52
-        connectionID = NetworkTransport.Connect(socketID, "149.153.102.62", socketPort, 0, out error);
+        connectionID = NetworkTransport.Connect(socketID, "149.153.102.39", socketPort, 0, out error);
         //Debug.Log("Sending my connect message " );
         if(player == 0)
         {
@@ -60,7 +60,7 @@ public class Client : MonoBehaviour {
     // Update is called once per frame
     void Update()
     { 
- 
+
             int recHostId;
             int recChannelId;
             byte[] recBuffer = new byte[1024];
@@ -145,19 +145,13 @@ public class Client : MonoBehaviour {
     }
     public void SendMyUpdate(float posX, float posY)
     {
-
+ 
             byte error;
             _updateMessage.Clear();
             _updateMessage.Add((byte)'U');
             _updateMessage.AddRange(System.BitConverter.GetBytes(posX));
             _updateMessage.AddRange(System.BitConverter.GetBytes(posY));
-            //_updateMessage.AddRange(System.BitConverter.GetBytes(velocity.x));
-            //_updateMessage.AddRange(System.BitConverter.GetBytes(velocity.y));
-            //_updateMessage.AddRange(System.BitConverter.GetBytes(rotZ));
             byte[] messageToSend = _updateMessage.ToArray();
-            //Debug.Log("Sending my update message  " + messageToSend + " to all players in the room , Length " +
-            //    messageToSend.Length);
-            //PlayGamesPlatform.Instance.RealTime.SendMessageToAll(false, messageToSend);
             NetworkTransport.Send(socketID, connectionID, ChannelID, messageToSend, messageToSend.Length, out error);
     }
     public static int getPlayer()
