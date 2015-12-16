@@ -7,6 +7,9 @@ public class Player1 : MonoBehaviour {
     public float speed;
     public bool moving;
 
+    int time;
+    public Text timerText;
+
     // Use this for initialization
     void Start () {
         thisTransform = transform;
@@ -19,6 +22,8 @@ public class Player1 : MonoBehaviour {
         {
             InputMovement();
         }
+        time ++;
+        timerText.text = "Timer : " + time;
     }
 
     private void InputMovement()
